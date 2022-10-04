@@ -6,6 +6,8 @@ import { string } from '../util/config';
 import Loader from '../components/Error';
 import { ReloadInstructions } from 'react-native/Libraries/NewAppScreen';
 
+
+
 export default function QrScreen({navigation}) {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
@@ -28,8 +30,11 @@ export default function QrScreen({navigation}) {
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
     setText(data)
+    console.log(data)
     navigation.navigate('Pre' ,data
     )
+    return 0 ;
+
    // console.log('Type: ' + type + '\nData: ' + data)
   };
 

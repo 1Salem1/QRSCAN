@@ -1,11 +1,15 @@
 import { View, Text , TouchableOpacity , StyleSheet, ScrollView} from 'react-native'
 import React, { useState } from 'react'
 import { AntDesign } from '@expo/vector-icons'; 
-import { string } from '../util/config';
+import { Date, string } from '../util/config';
 import { useFocusEffect } from '@react-navigation/native';
 import { jsonToCSV } from 'react-native-csv'
 import { useEffect } from 'react';
 import { objectToCsv } from '../util/config';
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
+
+
 
 const PrepaScreen = ({navigation, route}) => {
   const [List , setList] = useState([])
@@ -15,42 +19,53 @@ const PrepaScreen = ({navigation, route}) => {
   const textv = route?.params
 
 
-const generateCSV = () => {
+const generateCSV = async () => {
+
+
+  const csvData = objectToCsv(List);
+  console.log(csvData)
+ 
+/*   let fileUri = FileSystem.documentDirectory + "text.txt";
+  await FileSystem.writeAsStringAsync(fileUri, "Hello World", { encoding: FileSystem.EncodingType.UTF8 });
+  const asset = await MediaLibrary.createAssetAsync(fileUri) */
 
 
 
+  const filename = FileSystem.documentDirectory + "data.txt";
+    FileSystem.writeAsStringAsync(filename, csvData, {
+      encoding: FileSystem.EncodingType.UTF8
+    }).then(() => {
+      Sharing.shareAsync(filename);
+    });
+  };
 
   
 
-  }
+  
 
-
- const  checkText = () => {
-    
-      var  obj =  string(text)
-      setList( List => [...List, {
-          name : obj.name + ' ' + obj.size ,
-          serie : obj.serie
-      }])
-      
-      
-      
-  }
 
 
 
 
     React.useEffect(() => {
       
-   checkText()
+  if(textv){
+     const obj = string(textv)
+     
+    setList( List => [...List, {
+      name : obj.name + ' ' + obj.size ,
+      size : obj.size,
+      serie : obj.serie
+  }])
+  }
 
      
-    }, [text])
+    }, [textv])
   
 
    
 
-console.log(List)
+//console.log(List)
 
   return (
     <><View style={{ backgroundColor: 'white', height: 100, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
@@ -102,7 +117,7 @@ console.log(List)
 
           </ScrollView>
      <View style={{backgroundColor : 'white' , alignItems:'center'}}>
-     <TouchableOpacity style={styles.button} onPress={()=> generateCSV()}>
+     <TouchableOpacity style={styles.button} onPress={ () => generateCSV() }>
         <Text style={styles.continue}>Partager la liste</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button1} onPress={()=> navigation.navigate('Qr')}>

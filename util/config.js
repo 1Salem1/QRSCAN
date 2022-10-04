@@ -15,13 +15,14 @@ export function string (data){
             return null
         }
         else {
-            console.log(result[1].substring(0,3))
-        
+           // console.log(result[1].substring(0,3))
+        console.log(result)
             return {
                 name : result[0] ,
                 size : result[1].substring(0,3) ,
-                serie : result[1]
+                serie : result[result.length-1]
             }
+
         }
        
         
@@ -63,3 +64,15 @@ export function objectToCsv(data) {
        to this function.*/
     return csvRows.join('\n');
 };
+
+export function Date(){
+
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+    
+    today = mm + '/' + dd + '/' + yyyy;
+    return today;
+
+}
